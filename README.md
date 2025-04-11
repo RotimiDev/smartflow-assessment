@@ -10,6 +10,8 @@ This project is an Android application that allows users to manage a list of pro
 
 **Data Persistence:** Room
 
+**Navigation:** Compose navigation
+
 **Networking:** Retrofit (for API communication)
 
 **Charts:** MPAndroidChart & Jetpack Compose Charts
@@ -48,6 +50,8 @@ Select a device (emulator or connected Android device) and click Run.
 # Acknowledgements
 
 **API from:** https://dummyjson.com/
+
+**Google Material 3**
 
 **Jetpack Compose:** For building modern UI.
 
