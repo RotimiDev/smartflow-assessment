@@ -355,7 +355,6 @@ fun ItemEditScreen(
                     }
                 }
 
-                // Categorization Section
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
@@ -506,7 +505,6 @@ fun ItemEditScreen(
                     }
                 }
 
-                // Submit Button for accessibility (in addition to FAB)
                 Spacer(modifier = Modifier.height(16.dp))
                 Button(
                     onClick = {
