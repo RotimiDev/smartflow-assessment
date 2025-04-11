@@ -1,13 +1,17 @@
 package com.example.smartflowassessment.ui.screens.reports
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +21,7 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -44,6 +49,10 @@ fun ReportsScreen(
     val items by viewModel.items.collectAsState()
     var currentTabIndex by rememberSaveable { mutableIntStateOf(0) }
     val tabTitles = listOf("Stock Overview", "Trends", "Categories")
+
+    LaunchedEffect(Unit) {
+        viewModel.refreshData()
+    }
 
     Scaffold(
         topBar = {
@@ -94,7 +103,7 @@ fun ReportsScreen(
                     when (currentTabIndex) {
                         0 -> StockOverviewScreen(items)
                         1 -> TrendsScreen(viewModel)
-                        2 -> CategoriesScreen(items)
+                        2 -> CategoriesScreen(viewModel)
                     }
                 }
             }
@@ -187,7 +196,22 @@ fun TrendsScreen(viewModel: ReportsViewModel) {
 }
 
 @Composable
-fun CategoriesScreen(items: List<Item>) {
+fun CategoriesScreen(viewModel: ReportsViewModel = hiltViewModel()) {
+    val items by viewModel.items.collectAsState()
+
+    if (items.isEmpty()) {
+        Box(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .height(200.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator()
+        }
+        return
+    }
+
     val categoryCounts =
         items
             .groupBy { it.category }
@@ -197,6 +221,10 @@ fun CategoriesScreen(items: List<Item>) {
         items
             .groupBy { it.category }
             .mapValues { entry -> entry.value.sumOf { it.stock }.toFloat() }
+
+    val categoryLabels = categoryCounts.keys.toList()
+    val categoryCountValues = categoryCounts.values.toList()
+    val categoryTotalValues = categoryTotals.values.toList()
 
     Column(
         modifier =
@@ -210,14 +238,38 @@ fun CategoriesScreen(items: List<Item>) {
             modifier = Modifier.padding(vertical = 8.dp),
         )
 
-        ChartComponent(
-            entries = categoryCounts.values.toList(),
-            labels = categoryCounts.keys.toList(),
-            chartType = ChartType.HORIZONTAL_BAR,
-            modifier = Modifier.height(250.dp),
-        )
+        categoryLabels.forEachIndexed { index, category ->
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = category,
+                    modifier = Modifier.width(100.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(24.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.primary.copy(alpha = 0.7f),
+                                shape = RoundedCornerShape(4.dp),
+                            ),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = categoryCountValues[index].toInt().toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(24.dp))
 
         Text(
             text = "Stock by Category",
@@ -225,11 +277,35 @@ fun CategoriesScreen(items: List<Item>) {
             modifier = Modifier.padding(vertical = 8.dp),
         )
 
-        ChartComponent(
-            entries = categoryTotals.values.toList(),
-            labels = categoryTotals.keys.toList(),
-            chartType = ChartType.DONUT,
-            modifier = Modifier.height(250.dp),
-        )
+        categoryLabels.forEachIndexed { index, category ->
+            Row(
+                modifier =
+                    Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = category,
+                    modifier = Modifier.width(100.dp),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                Box(
+                    modifier =
+                        Modifier
+                            .weight(1f)
+                            .height(24.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
+                                shape = RoundedCornerShape(4.dp),
+                            ),
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = categoryTotalValues[index].toInt().toString(),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            }
+        }
     }
 }

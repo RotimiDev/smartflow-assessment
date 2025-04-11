@@ -154,7 +154,7 @@ fun DashboardScreen(
                     ChartComponent(
                         entries = entries,
                         labels = labels,
-                        chartType = ChartType.PIE,
+                        chartType = ChartType.BAR,
                     )
                 } else {
                     Box(

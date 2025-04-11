@@ -4,6 +4,4 @@ enum class ChartType {
     PIE,
     LINE,
     BAR,
-    HORIZONTAL_BAR,
-    DONUT,
 }
