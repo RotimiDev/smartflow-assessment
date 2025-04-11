@@ -8,10 +8,10 @@ This project is an Android application that allows users to manage a list of pro
 
 **UI Framework:** Jetpack Compose
 
-**Data Persistence:** Room / Jetpack Data Store
+**Data Persistence:** Room
 
 **Networking:** Retrofit (for API communication)
 
-**Charts:** MPAndroidChart / Jetpack Compose Charts
+**Charts:** MPAndroidChart & Jetpack Compose Charts
 
 **Dependency Injection:** Hilt
