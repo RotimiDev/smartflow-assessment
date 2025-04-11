@@ -17,7 +17,9 @@ This project is an Android application that allows users to manage a list of pro
 **Dependency Injection:** Hilt
 
 # Setup & Installation
+
 **Prerequisites**
+
 Android Studio - Hedgehog
 
 Kotlin 1.5 or later
