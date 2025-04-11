@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">SmartFlow Assessment</string>
+    <string name="welcome_back">Welcome back 👋</string>
+    <string name="key_metrics">Key Metrics</string>
+    <string name="total_items">Total Items</string>
+    <string name="out_of_stock">Out of Stock</string>
+    <string name="low_stock">Low Stock</string>
+    <string name="inventory_value">Inventory Value</string>
+    <string name="view_all_items">View All Items</string>
+    <string name="stock_overview">Stock Overview by Category</string>
+    <string name="distribution_across_categories">Distribution of inventory across categories</string>
+    <string name="sales_performance">Sales Performance</string>
+    <string name="monthly_sales">Monthly sales data for the past 6 months</string>
+    <string name="loading_sales_data">Loading sales data…</string>
+    <string name="recent_activity">Recent Activity</string>
 </resources>

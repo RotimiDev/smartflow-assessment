@@ -24,9 +24,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.smartflowassessment.R
 import com.example.smartflowassessment.ui.components.ActivityCard
 import com.example.smartflowassessment.ui.components.BottomNav
 import com.example.smartflowassessment.ui.components.ChartComponent
@@ -60,22 +62,26 @@ fun DashboardScreen(
         },
     ) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(16.dp),
+            modifier =
+                Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             item {
                 OfflineIndicator()
                 Text(
-                    text = "Welcome back 👋",
+                    text = stringResource(R.string.welcome_back),
                     style = MaterialTheme.typography.headlineSmall,
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
 
-                Text("Key Metrics", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.key_metrics),
+                    style = MaterialTheme.typography.titleMedium,
+                )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 LazyRow(
@@ -84,31 +90,31 @@ fun DashboardScreen(
                 ) {
                     item {
                         MetricCard(
-                            label = "Total Items",
+                            label = stringResource(R.string.total_items),
                             value = totalItems,
                             backgroundColor = MaterialTheme.colorScheme.primaryContainer,
                         )
                     }
                     item {
                         MetricCard(
-                            label = "Out of Stock",
+                            label = stringResource(R.string.out_of_stock),
                             value = outOfStock,
                             backgroundColor = MaterialTheme.colorScheme.errorContainer,
                         )
                     }
                     item {
                         MetricCard(
-                            label = "Low Stock",
+                            label = stringResource(R.string.low_stock),
                             value = lowStock,
                             backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
                         )
                     }
                     item {
                         MetricCard(
-                            label = "Inventory Value",
+                            label = stringResource(R.string.inventory_value),
                             value = "$${"%.2f".format(totalValue)}",
                             backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
-                            isMonetary = true
+                            isMonetary = true,
                         )
                     }
                 }
@@ -126,33 +132,36 @@ fun DashboardScreen(
                         },
                         modifier = Modifier.height(45.dp),
                     ) {
-                        Text("View All Items")
+                        Text(stringResource(R.string.view_all_items))
                     }
                 }
             }
 
             item {
-                Text("Stock Overview by Category",
-                    style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.stock_overview),
+                    style = MaterialTheme.typography.titleMedium,
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 val stockChartData = viewModel.stockByCategory.collectAsState()
                 val (entries, labels) = stockChartData.value
                 if (entries.isNotEmpty()) {
                     Text(
-                        "Distribution of inventory across categories",
+                        stringResource(R.string.distribution_across_categories),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     ChartComponent(
                         entries = entries,
                         labels = labels,
-                        chartType = ChartType.PIE
+                        chartType = ChartType.PIE,
                     )
                 } else {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator()
@@ -161,47 +170,57 @@ fun DashboardScreen(
             }
 
             item {
-                Text("Sales Performance",
-                    style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.sales_performance),
+                    style = MaterialTheme.typography.titleMedium,
+                )
                 Spacer(modifier = Modifier.height(8.dp))
 
                 if (salesData.isNotEmpty()) {
                     Text(
-                        "Monthly sales data for the past 6 months",
+                        text = stringResource(R.string.monthly_sales),
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     SalesBarChart(
                         salesData = salesData,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(220.dp)
-                            .padding(vertical = 8.dp)
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(220.dp)
+                                .padding(vertical = 8.dp),
                     )
                 } else {
                     Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
+                        modifier =
+                            Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             CircularProgressIndicator()
                             Spacer(modifier = Modifier.height(8.dp))
-                            Text("Loading sales data...", style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                stringResource(R.string.loading_sales_data),
+                                style = MaterialTheme.typography.bodySmall,
+                            )
                         }
                     }
                 }
             }
 
             item {
-                Text("Recent Activity", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    stringResource(R.string.recent_activity),
+                    style = MaterialTheme.typography.titleMedium,
+                )
                 Spacer(modifier = Modifier.height(8.dp))
             }
             items(recentActivity) { item ->
                 ActivityCard(
                     item = item,
-                    onClick = { navController.navigate("${Screen.ItemDetail.route}/${item.id}") }
+                    onClick = { navController.navigate("${Screen.ItemDetail.route}/${item.id}") },
                 )
             }
 
