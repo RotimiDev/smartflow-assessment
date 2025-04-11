@@ -22,7 +22,7 @@ import com.example.smartflowassessment.ui.components.BottomNav
 import com.example.smartflowassessment.ui.components.ChartComponent
 import com.example.smartflowassessment.ui.components.OfflineIndicator
 import com.example.smartflowassessment.ui.components.TopBar
-import com.github.mikephil.charting.data.BarEntry
+import com.example.smartflowassessment.utils.ChartType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,7 +37,9 @@ fun ReportsScreen(
             TopBar(
                 title = "Reports",
                 showBack = true,
-                onBackClick = { navController.popBackStack() },
+                onBackClick = {
+                    navController.popBackStack()
+                },
             )
         },
         bottomBar = {
@@ -52,17 +54,17 @@ fun ReportsScreen(
                     .padding(16.dp),
         ) {
             OfflineIndicator()
-
             Spacer(modifier = Modifier.height(16.dp))
 
             if (items.isNotEmpty()) {
-                val chartEntries =
-                    items.mapIndexed { index, item ->
-                        BarEntry(index.toFloat(), item.stock.toFloat())
-                    }
+                val stockValues = items.map { it.stock.toFloat() }
                 val chartLabels = items.map { it.title }
 
-                ChartComponent(entries = chartEntries, labels = chartLabels)
+                ChartComponent(
+                    entries = stockValues,
+                    labels = chartLabels,
+                    chartType = ChartType.PIE,
+                )
             } else {
                 Box(
                     modifier =

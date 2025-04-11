@@ -2,13 +2,14 @@ package com.example.smartflowassessment.ui.screens.dashboard
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -26,11 +27,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.example.smartflowassessment.ui.components.ActivityCard
 import com.example.smartflowassessment.ui.components.BottomNav
 import com.example.smartflowassessment.ui.components.ChartComponent
 import com.example.smartflowassessment.ui.components.MetricCard
 import com.example.smartflowassessment.ui.components.OfflineIndicator
+import com.example.smartflowassessment.ui.components.SalesBarChart
 import com.example.smartflowassessment.ui.navigation.Screen
+import com.example.smartflowassessment.utils.ChartType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -39,24 +43,27 @@ fun DashboardScreen(
     viewModel: DashboardViewModel = hiltViewModel(),
 ) {
     val items by viewModel.items.collectAsState()
+    val salesData by viewModel.salesData.collectAsState()
+
     val totalItems = items.size
     val outOfStock = items.count { it.stock == 0 }
+    val lowStock = items.count { it.stock in 1..5 }
+    val totalValue = items.sumOf { it.price * it.stock }
     val recentActivity = items.take(5)
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "") })
+            TopAppBar(title = { Text(text = "Inventory Dashboard") })
         },
         bottomBar = {
             BottomNav(navController)
         },
     ) { paddingValues ->
         LazyColumn(
-            modifier =
-                Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(16.dp),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp),
         ) {
             item {
@@ -67,20 +74,43 @@ fun DashboardScreen(
                     color = MaterialTheme.colorScheme.primary,
                 )
                 Spacer(modifier = Modifier.height(24.dp))
-                Row(
+
+                Text("Key Metrics", style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                LazyRow(
                     horizontalArrangement = Arrangement.spacedBy(16.dp),
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    MetricCard(
-                        label = "Total Items",
-                        value = totalItems,
-                        backgroundColor = MaterialTheme.colorScheme.primaryContainer,
-                    )
-                    MetricCard(
-                        label = "Out of Stock",
-                        value = outOfStock,
-                        backgroundColor = MaterialTheme.colorScheme.errorContainer,
-                    )
+                    item {
+                        MetricCard(
+                            label = "Total Items",
+                            value = totalItems,
+                            backgroundColor = MaterialTheme.colorScheme.primaryContainer,
+                        )
+                    }
+                    item {
+                        MetricCard(
+                            label = "Out of Stock",
+                            value = outOfStock,
+                            backgroundColor = MaterialTheme.colorScheme.errorContainer,
+                        )
+                    }
+                    item {
+                        MetricCard(
+                            label = "Low Stock",
+                            value = lowStock,
+                            backgroundColor = MaterialTheme.colorScheme.tertiaryContainer,
+                        )
+                    }
+                    item {
+                        MetricCard(
+                            label = "Inventory Value",
+                            value = "$${"%.2f".format(totalValue)}",
+                            backgroundColor = MaterialTheme.colorScheme.secondaryContainer,
+                            isMonetary = true
+                        )
+                    }
                 }
             }
 
@@ -102,18 +132,27 @@ fun DashboardScreen(
             }
 
             item {
-                Text("Stock Overview", style = MaterialTheme.typography.titleMedium)
+                Text("Stock Overview by Category",
+                    style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(8.dp))
-                val chartData = viewModel.chartData.collectAsState()
-                val (entries, labels) = chartData.value
+                val stockChartData = viewModel.stockByCategory.collectAsState()
+                val (entries, labels) = stockChartData.value
                 if (entries.isNotEmpty()) {
-                    ChartComponent(entries = entries, labels = labels)
+                    Text(
+                        "Distribution of inventory across categories",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    ChartComponent(
+                        entries = entries,
+                        labels = labels,
+                        chartType = ChartType.PIE
+                    )
                 } else {
                     Box(
-                        modifier =
-                            Modifier
-                                .fillMaxWidth()
-                                .height(200.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
                         contentAlignment = Alignment.Center,
                     ) {
                         CircularProgressIndicator()
@@ -122,12 +161,52 @@ fun DashboardScreen(
             }
 
             item {
+                Text("Sales Performance",
+                    style = MaterialTheme.typography.titleMedium)
+                Spacer(modifier = Modifier.height(8.dp))
+
+                if (salesData.isNotEmpty()) {
+                    Text(
+                        "Monthly sales data for the past 6 months",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    SalesBarChart(
+                        salesData = salesData,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(220.dp)
+                            .padding(vertical = 8.dp)
+                    )
+                } else {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(200.dp),
+                        contentAlignment = Alignment.Center,
+                    ) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            CircularProgressIndicator()
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text("Loading sales data...", style = MaterialTheme.typography.bodySmall)
+                        }
+                    }
+                }
+            }
+
+            item {
                 Text("Recent Activity", style = MaterialTheme.typography.titleMedium)
                 Spacer(modifier = Modifier.height(8.dp))
             }
-
             items(recentActivity) { item ->
-                Text("Item: ${item.title} | Added on: ${item.updatedAt}")
+                ActivityCard(
+                    item = item,
+                    onClick = { navController.navigate("${Screen.ItemDetail.route}/${item.id}") }
+                )
+            }
+
+            item {
+                Spacer(modifier = Modifier.height(16.dp))
             }
         }
     }
