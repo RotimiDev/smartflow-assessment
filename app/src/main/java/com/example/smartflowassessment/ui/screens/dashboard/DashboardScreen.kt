@@ -53,7 +53,7 @@ fun DashboardScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Inventory Dashboard") })
+            TopAppBar(title = { Text(text = "") })
         },
         bottomBar = {
             BottomNav(navController)
