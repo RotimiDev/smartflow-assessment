@@ -61,4 +61,11 @@ Select a device (emulator or connected Android device) and click Run.
 
 **Hilt:** For dependency injection.
 
-
+![Screenshot_20250413_110721](https://github.com/user-attachments/assets/d278cce5-b9f9-4444-b37c-d048688a2788)
+![Screenshot_20250413_110939](https://github.com/user-attachments/assets/ad984ece-6a65-4e70-9db2-aeccb828d72c)
+![Screenshot_20250413_111024](https://github.com/user-attachments/assets/f79f299f-2062-46c3-8234-7ed8d66169b9)
+![Screenshot_20250413_111007](https://github.com/user-attachments/assets/fcf02481-dcfc-4632-9d39-48a0b1e399c7)
+![Screenshot_20250413_111115](https://github.com/user-attachments/assets/b3d37a0c-c256-4c10-83c1-a3b6e180df13)
+![Screenshot_20250413_111216](https://github.com/user-attachments/assets/9bf8eac4-1665-4818-9ae3-d72b6fce0d47)
+![Screenshot_20250413_111227](https://github.com/user-attachments/assets/8c1a32ad-f5d9-42dc-9465-2a2947e80b4d)
+![Screenshot_20250413_111241](https://github.com/user-attachments/assets/06b8d679-e0be-4cd7-b03e-35bd27e7b276)
